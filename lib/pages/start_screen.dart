@@ -20,15 +20,12 @@ class StartScreen extends HookConsumerWidget {
     return SafeArea(
       child: Scaffold(
           backgroundColor: Colors.grey.shade900,
-          body: Row(
-            children: [
-              Wrap(
-                  children: ref
-                      .watch(allPlayerSessionsProvider)
-                      .map((session) =>
-                          PlayerSessionTile(playerSession: session))
-                      .toList()),
-            ],
+          body: SingleChildScrollView(
+            child: Wrap(
+                children: ref
+                    .watch(allPlayerSessionsProvider)
+                    .map((session) => PlayerSessionTile(playerSession: session))
+                    .toList()),
           )),
     );
   }

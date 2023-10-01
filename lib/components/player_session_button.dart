@@ -25,7 +25,9 @@ class PlayerSessionTile extends StatelessWidget {
           Navigator.push(
               context,
               MaterialPageRoute<void>(
-                builder: (BuildContext context) => const Dashboard(),
+                builder: (BuildContext context) => Dashboard(
+                  playerSession: playerSession,
+                ),
               ));
         },
         child: Padding(
