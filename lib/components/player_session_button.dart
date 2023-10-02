@@ -41,11 +41,14 @@ class PlayerSessionTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Campaign \n${playerSession.campaignName.toUpperCase()}',
-                    style: TextStyle(
-                        fontSize: 24,
-                        color: Theme.of(context).colorScheme.onSecondary),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 48.0),
+                    child: Text(
+                      '${playerSession.campaignName.toUpperCase()}',
+                      style: TextStyle(
+                          fontSize: 24,
+                          color: Theme.of(context).colorScheme.onSecondary),
+                    ),
                   ),
                   Text(
                     'ID: ${playerSession.id}',
