@@ -9,3 +9,7 @@ final allPlayerSessionsProvider = StateProvider<List<PlayerSession>>((ref) {
 final playerSessionrovider = StateProvider<PlayerSession?>((ref) {
   return null;
 });
+
+final navRailIndexProvider = StateProvider<int>((ref) {
+  return 0;
+});
