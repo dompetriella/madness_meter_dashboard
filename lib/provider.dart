@@ -13,3 +13,7 @@ final playerSessionrovider = StateProvider<PlayerSession?>((ref) {
 final navRailIndexProvider = StateProvider<int>((ref) {
   return 0;
 });
+
+final visualMadnessProvider = StateProvider<int>((ref) {
+  return 0;
+});
