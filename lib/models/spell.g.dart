@@ -7,14 +7,22 @@ part of 'spell.dart';
 // **************************************************************************
 
 _$SpellImpl _$$SpellImplFromJson(Map<String, dynamic> json) => _$SpellImpl(
-      spellName: json['spellName'] as String,
+      id: json['id'] as int,
+      createdAt: DateTime.parse(json['created_at'] as String),
+      spellName: json['spell_name'] as String,
       description: json['description'] as String,
-      spellType: json['spellType'] as int,
+      spellType: json['spell_type'] as int,
+      availableCampaigns: (json['available_campaigns'] as List<dynamic>)
+          .map((e) => e as int)
+          .toList(),
     );
 
 Map<String, dynamic> _$$SpellImplToJson(_$SpellImpl instance) =>
     <String, dynamic>{
-      'spellName': instance.spellName,
+      'id': instance.id,
+      'created_at': instance.createdAt.toIso8601String(),
+      'spell_name': instance.spellName,
       'description': instance.description,
-      'spellType': instance.spellType,
+      'spell_type': instance.spellType,
+      'available_campaigns': instance.availableCampaigns,
     };

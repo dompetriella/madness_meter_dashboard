@@ -20,9 +20,17 @@ Spell _$SpellFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Spell {
+  int get id => throw _privateConstructorUsedError;
+  @JsonKey(name: 'created_at')
+  DateTime get createdAt => throw _privateConstructorUsedError;
+  @JsonKey(name: 'spell_name')
   String get spellName => throw _privateConstructorUsedError;
+  @JsonKey(name: 'description')
   String get description => throw _privateConstructorUsedError;
+  @JsonKey(name: 'spell_type')
   int get spellType => throw _privateConstructorUsedError;
+  @JsonKey(name: 'available_campaigns')
+  List<int> get availableCampaigns => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -34,7 +42,13 @@ abstract class $SpellCopyWith<$Res> {
   factory $SpellCopyWith(Spell value, $Res Function(Spell) then) =
       _$SpellCopyWithImpl<$Res, Spell>;
   @useResult
-  $Res call({String spellName, String description, int spellType});
+  $Res call(
+      {int id,
+      @JsonKey(name: 'created_at') DateTime createdAt,
+      @JsonKey(name: 'spell_name') String spellName,
+      @JsonKey(name: 'description') String description,
+      @JsonKey(name: 'spell_type') int spellType,
+      @JsonKey(name: 'available_campaigns') List<int> availableCampaigns});
 }
 
 /// @nodoc
@@ -50,11 +64,22 @@ class _$SpellCopyWithImpl<$Res, $Val extends Spell>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
+    Object? createdAt = null,
     Object? spellName = null,
     Object? description = null,
     Object? spellType = null,
+    Object? availableCampaigns = null,
   }) {
     return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
       spellName: null == spellName
           ? _value.spellName
           : spellName // ignore: cast_nullable_to_non_nullable
@@ -67,6 +92,10 @@ class _$SpellCopyWithImpl<$Res, $Val extends Spell>
           ? _value.spellType
           : spellType // ignore: cast_nullable_to_non_nullable
               as int,
+      availableCampaigns: null == availableCampaigns
+          ? _value.availableCampaigns
+          : availableCampaigns // ignore: cast_nullable_to_non_nullable
+              as List<int>,
     ) as $Val);
   }
 }
@@ -78,7 +107,13 @@ abstract class _$$SpellImplCopyWith<$Res> implements $SpellCopyWith<$Res> {
       __$$SpellImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String spellName, String description, int spellType});
+  $Res call(
+      {int id,
+      @JsonKey(name: 'created_at') DateTime createdAt,
+      @JsonKey(name: 'spell_name') String spellName,
+      @JsonKey(name: 'description') String description,
+      @JsonKey(name: 'spell_type') int spellType,
+      @JsonKey(name: 'available_campaigns') List<int> availableCampaigns});
 }
 
 /// @nodoc
@@ -92,11 +127,22 @@ class __$$SpellImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
+    Object? createdAt = null,
     Object? spellName = null,
     Object? description = null,
     Object? spellType = null,
+    Object? availableCampaigns = null,
   }) {
     return _then(_$SpellImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
       spellName: null == spellName
           ? _value.spellName
           : spellName // ignore: cast_nullable_to_non_nullable
@@ -109,6 +155,10 @@ class __$$SpellImplCopyWithImpl<$Res>
           ? _value.spellType
           : spellType // ignore: cast_nullable_to_non_nullable
               as int,
+      availableCampaigns: null == availableCampaigns
+          ? _value._availableCampaigns
+          : availableCampaigns // ignore: cast_nullable_to_non_nullable
+              as List<int>,
     ));
   }
 }
@@ -117,23 +167,45 @@ class __$$SpellImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$SpellImpl with DiagnosticableTreeMixin implements _Spell {
   const _$SpellImpl(
-      {required this.spellName,
-      required this.description,
-      required this.spellType});
+      {required this.id,
+      @JsonKey(name: 'created_at') required this.createdAt,
+      @JsonKey(name: 'spell_name') required this.spellName,
+      @JsonKey(name: 'description') required this.description,
+      @JsonKey(name: 'spell_type') required this.spellType,
+      @JsonKey(name: 'available_campaigns')
+      required final List<int> availableCampaigns})
+      : _availableCampaigns = availableCampaigns;
 
   factory _$SpellImpl.fromJson(Map<String, dynamic> json) =>
       _$$SpellImplFromJson(json);
 
   @override
+  final int id;
+  @override
+  @JsonKey(name: 'created_at')
+  final DateTime createdAt;
+  @override
+  @JsonKey(name: 'spell_name')
   final String spellName;
   @override
+  @JsonKey(name: 'description')
   final String description;
   @override
+  @JsonKey(name: 'spell_type')
   final int spellType;
+  final List<int> _availableCampaigns;
+  @override
+  @JsonKey(name: 'available_campaigns')
+  List<int> get availableCampaigns {
+    if (_availableCampaigns is EqualUnmodifiableListView)
+      return _availableCampaigns;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_availableCampaigns);
+  }
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'Spell(spellName: $spellName, description: $description, spellType: $spellType)';
+    return 'Spell(id: $id, createdAt: $createdAt, spellName: $spellName, description: $description, spellType: $spellType, availableCampaigns: $availableCampaigns)';
   }
 
   @override
@@ -141,9 +213,12 @@ class _$SpellImpl with DiagnosticableTreeMixin implements _Spell {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('type', 'Spell'))
+      ..add(DiagnosticsProperty('id', id))
+      ..add(DiagnosticsProperty('createdAt', createdAt))
       ..add(DiagnosticsProperty('spellName', spellName))
       ..add(DiagnosticsProperty('description', description))
-      ..add(DiagnosticsProperty('spellType', spellType));
+      ..add(DiagnosticsProperty('spellType', spellType))
+      ..add(DiagnosticsProperty('availableCampaigns', availableCampaigns));
   }
 
   @override
@@ -151,18 +226,29 @@ class _$SpellImpl with DiagnosticableTreeMixin implements _Spell {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$SpellImpl &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
             (identical(other.spellName, spellName) ||
                 other.spellName == spellName) &&
             (identical(other.description, description) ||
                 other.description == description) &&
             (identical(other.spellType, spellType) ||
-                other.spellType == spellType));
+                other.spellType == spellType) &&
+            const DeepCollectionEquality()
+                .equals(other._availableCampaigns, _availableCampaigns));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, spellName, description, spellType);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      createdAt,
+      spellName,
+      description,
+      spellType,
+      const DeepCollectionEquality().hash(_availableCampaigns));
 
   @JsonKey(ignore: true)
   @override
@@ -180,18 +266,33 @@ class _$SpellImpl with DiagnosticableTreeMixin implements _Spell {
 
 abstract class _Spell implements Spell {
   const factory _Spell(
-      {required final String spellName,
-      required final String description,
-      required final int spellType}) = _$SpellImpl;
+      {required final int id,
+      @JsonKey(name: 'created_at') required final DateTime createdAt,
+      @JsonKey(name: 'spell_name') required final String spellName,
+      @JsonKey(name: 'description') required final String description,
+      @JsonKey(name: 'spell_type') required final int spellType,
+      @JsonKey(name: 'available_campaigns')
+      required final List<int> availableCampaigns}) = _$SpellImpl;
 
   factory _Spell.fromJson(Map<String, dynamic> json) = _$SpellImpl.fromJson;
 
   @override
+  int get id;
+  @override
+  @JsonKey(name: 'created_at')
+  DateTime get createdAt;
+  @override
+  @JsonKey(name: 'spell_name')
   String get spellName;
   @override
+  @JsonKey(name: 'description')
   String get description;
   @override
+  @JsonKey(name: 'spell_type')
   int get spellType;
+  @override
+  @JsonKey(name: 'available_campaigns')
+  List<int> get availableCampaigns;
   @override
   @JsonKey(ignore: true)
   _$$SpellImplCopyWith<_$SpellImpl> get copyWith =>

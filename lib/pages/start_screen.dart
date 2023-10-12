@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:madness_meter_dashboard/components/player_session_button.dart';
+import 'package:madness_meter_dashboard/components/player_session_tile.dart';
 import 'package:madness_meter_dashboard/db_functions.dart';
 import 'package:madness_meter_dashboard/provider.dart';
 

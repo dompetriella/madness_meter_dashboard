@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:madness_meter_dashboard/models/player_session.dart';
-import 'package:madness_meter_dashboard/pages/dashboard.dart';
+import 'package:madness_meter_dashboard/pages/dashboard/dashboard.dart';
 
 class PlayerSessionTile extends StatelessWidget {
   final PlayerSession playerSession;
