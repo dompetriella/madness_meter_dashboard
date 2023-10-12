@@ -41,8 +41,13 @@ class SpellsScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               DragTarget<Spell>(
+                onWillAccept: (data) {
+                  return true;
+                },
                 onAccept: (Spell data) {
-                  ref.read(campaignSpellsProvider.notifier).addSpell(data);
+                  ref
+                      .read(campaignSpellsProvider.notifier)
+                      .removeSpellFromCampaign(data, ref);
                 },
                 builder: (context, candidateData, rejectedData) {
                   return Padding(
@@ -75,24 +80,36 @@ class SpellsScreen extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(10)),
                 ),
               ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8),
-                child: Container(
-                  width: MediaQuery.of(context).size.width * .4,
-                  constraints: BoxConstraints(minHeight: 300),
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Wrap(
-                    children: ref
-                        .watch(campaignSpellsProvider)
-                        .map((e) => ContainsSpellButton(
-                            spell: e, playerSession: playerSession))
-                        .toList(),
-                  ),
-                ),
-              )
+              DragTarget<Spell>(
+                onWillAccept: (data) {
+                  return true;
+                },
+                onAccept: (Spell data) {
+                  ref
+                      .read(allSpellsProvider.notifier)
+                      .addSpellToCampaign(data, ref);
+                },
+                builder: (context, candidateData, rejectedData) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16.0, horizontal: 8),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * .4,
+                      constraints: BoxConstraints(minHeight: 300),
+                      decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.primary,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Wrap(
+                        children: ref
+                            .watch(campaignSpellsProvider)
+                            .map((e) => ContainsSpellButton(
+                                spell: e, playerSession: playerSession))
+                            .toList(),
+                      ),
+                    ),
+                  );
+                },
+              ),
             ],
           ),
         ],
