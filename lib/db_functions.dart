@@ -3,6 +3,8 @@ import 'package:madness_meter_dashboard/main.dart';
 import 'package:madness_meter_dashboard/models/player_session.dart';
 import 'package:madness_meter_dashboard/provider.dart';
 
+import 'models/spell.dart';
+
 Future<PlayerSession> getSessionById(int id) async {
   final List<dynamic> session =
       await supabase.from('player_session').select('*').eq('id', id);
@@ -49,4 +51,10 @@ Future<List<PlayerSession>> getPlayerSessions() async {
       data.map((e) => PlayerSession.fromJson(e)).toList();
   playerSessions.sort((a, b) => a.id.compareTo(b.id));
   return playerSessions;
+}
+
+Future<List<Spell>> getAllSpells() async {
+  final List<dynamic> allSpells =
+      await supabase.from('madness_spells').select();
+  return allSpells.map((e) => Spell.fromJson(e)).toList();
 }

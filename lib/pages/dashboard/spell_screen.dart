@@ -1,20 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:madness_meter_dashboard/provider.dart';
 
+import '../../db_functions.dart';
 import '../../models/player_session.dart';
 import '../../models/spell.dart';
 
-class SpellsScreen extends ConsumerWidget {
+class SpellsScreen extends HookConsumerWidget {
   final PlayerSession playerSession;
   const SpellsScreen({super.key, required this.playerSession});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final initFunction = useCallback((_) async {
+      List<Spell> allSpells = await getAllSpells();
+      for (var spell in allSpells) {
+        if (spell.availableCampaigns.contains(playerSession.id)) {
+          ref
+              .read(campaignSpellsProvider.notifier)
+              .addSpell(spell, playerSession);
+        } else {
+          ref.read(allSpellsProvider.notifier).addSpell(spell, playerSession);
+        }
+      }
+    }, []);
+
+    useEffect(() {
+      initFunction(null);
+    }, []);
     return Padding(
       padding: const EdgeInsets.only(top: 32.0),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Row(
@@ -47,7 +66,7 @@ class SpellsScreen extends ConsumerWidget {
                 onAccept: (Spell data) {
                   ref
                       .read(campaignSpellsProvider.notifier)
-                      .removeSpellFromCampaign(data, ref);
+                      .removeSpellFromCampaign(data, ref, playerSession);
                 },
                 builder: (context, candidateData, rejectedData) {
                   return Padding(
@@ -60,6 +79,7 @@ class SpellsScreen extends ConsumerWidget {
                           color: Theme.of(context).colorScheme.tertiary,
                           borderRadius: BorderRadius.circular(10)),
                       child: Wrap(
+                        alignment: WrapAlignment.center,
                         children: ref
                             .watch(allSpellsProvider)
                             .map((e) => ContainsSpellButton(
@@ -87,7 +107,7 @@ class SpellsScreen extends ConsumerWidget {
                 onAccept: (Spell data) {
                   ref
                       .read(allSpellsProvider.notifier)
-                      .addSpellToCampaign(data, ref);
+                      .addSpellToCampaign(data, ref, playerSession);
                 },
                 builder: (context, candidateData, rejectedData) {
                   return Padding(
@@ -100,6 +120,7 @@ class SpellsScreen extends ConsumerWidget {
                           color: Theme.of(context).colorScheme.primary,
                           borderRadius: BorderRadius.circular(10)),
                       child: Wrap(
+                        alignment: WrapAlignment.center,
                         children: ref
                             .watch(campaignSpellsProvider)
                             .map((e) => ContainsSpellButton(
@@ -132,7 +153,7 @@ class ContainsSpellButton extends StatelessWidget {
         feedback: DraggableSpell(spell: spell),
         data: spell,
         childWhenDragging: Container(
-          width: 185,
+          width: 165,
           height: 115,
           decoration: BoxDecoration(
               color: Colors.grey.shade900,
@@ -199,13 +220,13 @@ class DraggableSpell extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 120, minHeight: 100),
+          constraints: BoxConstraints(maxWidth: 100, minHeight: 100),
           child: Center(
             child: Text(
               spell.spellName,
               textAlign: TextAlign.center,
               style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 16,
                   color: Theme.of(context).colorScheme.onSecondary),
             ),
           ),

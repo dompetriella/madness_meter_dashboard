@@ -5,10 +5,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:madness_meter_dashboard/main.dart';
 import 'package:madness_meter_dashboard/models/player_session.dart';
 import 'package:madness_meter_dashboard/provider.dart';
-
-import 'meter_screen.dart';
-import 'nav.dart';
-import 'spell_screen.dart';
+import 'dashboard/meter_screen.dart';
+import 'dashboard/nav.dart';
+import 'dashboard/spell_screen.dart';
 
 final PageController pageController = PageController();
 
@@ -33,6 +32,10 @@ class Dashboard extends HookConsumerWidget {
       }
       return null;
     }, const []);
+
+    var isMad =
+        ref.watch(visualMadnessProvider) > playerSession.maxMadnessValue;
+
     return SafeArea(
         child: Scaffold(
       backgroundColor: Colors.grey.shade900,
@@ -85,17 +88,21 @@ class Dashboard extends HookConsumerWidget {
                               child: AnimatedFractionallySizedBox(
                                   duration: 300.ms,
                                   alignment: Alignment.centerLeft,
-                                  widthFactor:
-                                      ref.watch(visualMadnessProvider) /
+                                  widthFactor: isMad
+                                      ? 1
+                                      : ref.watch(visualMadnessProvider) /
                                           playerSession.maxMadnessValue,
-                                  child: Container(
+                                  child: AnimatedContainer(
+                                    duration: 300.ms,
                                     decoration: BoxDecoration(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .tertiary,
-                                        borderRadius: const BorderRadius.only(
-                                            topLeft: Radius.circular(8),
-                                            bottomLeft: Radius.circular(8))),
+                                      color: isMad
+                                          ? Colors.red
+                                          : Theme.of(context)
+                                              .colorScheme
+                                              .tertiary,
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(8)),
+                                    ),
                                   )),
                             ),
                           ],
@@ -103,8 +110,7 @@ class Dashboard extends HookConsumerWidget {
                       ],
                     ),
                   ),
-                  SingleChildScrollView(
-                      child: dashboardScreen(playerSession, ref)),
+                  dashboardScreen(playerSession, ref),
                 ],
               ),
             ),
