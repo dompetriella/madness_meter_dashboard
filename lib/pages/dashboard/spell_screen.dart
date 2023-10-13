@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:madness_meter_dashboard/provider.dart';
 
-import '../../db_functions.dart';
 import '../../models/player_session.dart';
 import '../../models/spell.dart';
 
@@ -14,22 +12,6 @@ class SpellsScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final initFunction = useCallback((_) async {
-      List<Spell> allSpells = await getAllSpells();
-      for (var spell in allSpells) {
-        if (spell.availableCampaigns.contains(playerSession.id)) {
-          ref
-              .read(campaignSpellsProvider.notifier)
-              .addSpell(spell, playerSession);
-        } else {
-          ref.read(allSpellsProvider.notifier).addSpell(spell, playerSession);
-        }
-      }
-    }, []);
-
-    useEffect(() {
-      initFunction(null);
-    }, []);
     return Padding(
       padding: const EdgeInsets.only(top: 32.0),
       child: Column(
@@ -74,7 +56,7 @@ class SpellsScreen extends HookConsumerWidget {
                         vertical: 16.0, horizontal: 8),
                     child: Container(
                       width: MediaQuery.of(context).size.width * .4,
-                      constraints: BoxConstraints(minHeight: 300),
+                      constraints: const BoxConstraints(minHeight: 300),
                       decoration: BoxDecoration(
                           color: Theme.of(context).colorScheme.tertiary,
                           borderRadius: BorderRadius.circular(10)),
@@ -115,7 +97,7 @@ class SpellsScreen extends HookConsumerWidget {
                         vertical: 16.0, horizontal: 8),
                     child: Container(
                       width: MediaQuery.of(context).size.width * .4,
-                      constraints: BoxConstraints(minHeight: 300),
+                      constraints: const BoxConstraints(minHeight: 300),
                       decoration: BoxDecoration(
                           color: Theme.of(context).colorScheme.primary,
                           borderRadius: BorderRadius.circular(10)),
@@ -194,7 +176,7 @@ class DraggableSpell extends StatelessWidget {
                 backgroundColor: Colors.grey.shade900,
                 title: Text(
                   spell.spellName,
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white),
                 ),
                 content: SingleChildScrollView(
                     child: Container(
@@ -210,7 +192,7 @@ class DraggableSpell extends StatelessWidget {
                           padding: const EdgeInsets.all(16.0),
                           child: Text(
                             spell.description,
-                            style: TextStyle(color: Colors.white),
+                            style: const TextStyle(color: Colors.white),
                           ),
                         ))),
               ).animate().scale(duration: 200.ms).slideY(begin: 0.3);
@@ -220,7 +202,7 @@ class DraggableSpell extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 100, minHeight: 100),
+          constraints: const BoxConstraints(maxWidth: 100, minHeight: 100),
           child: Center(
             child: Text(
               spell.spellName,

@@ -44,7 +44,7 @@ class PlayerSessionTile extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 48.0),
                     child: Text(
-                      '${playerSession.campaignName.toUpperCase()}',
+                      playerSession.campaignName.toUpperCase(),
                       style: TextStyle(
                           fontSize: 24,
                           color: Theme.of(context).colorScheme.onSecondary),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:madness_meter_dashboard/db_functions.dart';
 
 import '../../provider.dart';
 
@@ -22,6 +23,7 @@ class NavRail extends ConsumerWidget {
             child: GestureDetector(
               onTap: () {
                 Navigator.pop(context);
+                ref.read(navRailIndexProvider.notifier).state = 0;
               },
               child: Container(
                 child: Padding(
@@ -36,12 +38,12 @@ class NavRail extends ConsumerWidget {
               ),
             ),
           ),
-          NavRailDestination(
+          const NavRailDestination(
             icon: Icons.dashboard,
             index: 0,
             text: 'Meter',
           ),
-          NavRailDestination(
+          const NavRailDestination(
             icon: Icons.auto_fix_high,
             index: 1,
             text: 'Spells',
@@ -91,7 +93,7 @@ class NavRailDestination extends ConsumerWidget {
                               : Theme.of(context).colorScheme.primary,
                         ),
                       ).animate().slideY(begin: 0.2).fadeIn()
-                    : SizedBox.shrink()
+                    : const SizedBox.shrink()
               ],
             ),
           ),

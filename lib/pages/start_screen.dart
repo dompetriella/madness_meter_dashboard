@@ -10,11 +10,13 @@ class StartScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final initFunction = useCallback((_) async {}, []);
-    addPlayerSessionsToState(ref);
+    final initFunction = useCallback((_) async {
+      addPlayerSessionsToState(ref);
+    }, []);
+
     useEffect(() {
       initFunction(null);
-      return null;
+      return;
     }, []);
 
     return SafeArea(

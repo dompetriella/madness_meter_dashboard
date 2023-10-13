@@ -21,20 +21,16 @@ Future<PlayerSession> getSessionIdByName(String campaignName) async {
   return idSession;
 }
 
-Future<int> getSessionMadness(int id) async {
-  final List<dynamic> session =
-      await supabase.from('player_session').select('*').eq('id', id);
-  PlayerSession idSession = PlayerSession.fromJson(session.firstOrNull);
-  return idSession.madnessValue;
-}
-
-void updateSessionMadnessValue(int id, int changeAmount) async {
-  int currentValue = await getSessionMadness(id);
+void updateSessionMadnessValue(int id, int changeAmount, WidgetRef ref) async {
+  int currentValue = ref.watch(madnessMeterProvider);
   int newValue =
       currentValue + changeAmount < 0 ? 0 : currentValue + changeAmount;
   await supabase.from('player_session').update({
     'madness_value': newValue,
   }).eq('id', id);
+  ref
+      .read(allPlayerSessionsProvider.notifier)
+      .updateSessionMadness(id, newValue);
 }
 
 void addPlayerSessionsToState(WidgetRef ref) async {

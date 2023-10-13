@@ -1,11 +1,15 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../db_functions.dart';
 import '../../models/player_session.dart';
+import '../../models/spell.dart';
+import '../../provider.dart';
 
-class MeterScreen extends StatelessWidget {
+class MeterScreen extends HookConsumerWidget {
   const MeterScreen({
     super.key,
     required this.playerSession,
@@ -14,7 +18,27 @@ class MeterScreen extends StatelessWidget {
   final PlayerSession playerSession;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final initFunction = useCallback((_) async {
+      List<Spell> allSpells = await getAllSpells();
+      ref.read(allSpellsProvider.notifier).clearAll();
+      ref.read(campaignSpellsProvider.notifier).clearAll();
+      for (var spell in allSpells) {
+        if (spell.availableCampaigns.contains(playerSession.id)) {
+          ref
+              .read(campaignSpellsProvider.notifier)
+              .addSpell(spell, playerSession);
+        } else {
+          ref.read(allSpellsProvider.notifier).addSpell(spell, playerSession);
+        }
+      }
+    }, []);
+
+    useEffect(() {
+      initFunction(null);
+      return null;
+    }, []);
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -92,7 +116,7 @@ class ActionButtonArea extends StatelessWidget {
   }
 }
 
-class DatabaseActionButton extends StatelessWidget {
+class DatabaseActionButton extends ConsumerWidget {
   final String text;
   final int value;
   final PlayerSession playerSession;
@@ -103,7 +127,7 @@ class DatabaseActionButton extends StatelessWidget {
       required this.playerSession});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: ElevatedButton(
@@ -123,7 +147,7 @@ class DatabaseActionButton extends StatelessWidget {
           if (value < 0) {
             roll = roll * -1;
           }
-          updateSessionMadnessValue(playerSession.id, roll);
+          updateSessionMadnessValue(playerSession.id, roll, ref);
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),

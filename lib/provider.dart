@@ -5,19 +5,29 @@ import 'main.dart';
 import 'models/spell.dart';
 
 // change this to switch back to other screen for now
-final allPlayerSessionsProvider = StateProvider<List<PlayerSession>>((ref) {
-  return [];
-});
+class AllPlayerSessionNotifier extends StateNotifier<List<PlayerSession>> {
+  AllPlayerSessionNotifier() : super([]);
 
-final playerSessionProvider = StateProvider<PlayerSession?>((ref) {
-  return null;
+  updateSessionMadness(int id, int newValue) {
+    List<PlayerSession> newState = List.from(state);
+    int sessionIndex = newState.indexWhere((element) => element.id == id);
+    PlayerSession updatedPlayerSession =
+        newState[sessionIndex].copyWith(madnessValue: newValue);
+    newState[sessionIndex] = updatedPlayerSession;
+    state = newState;
+  }
+}
+
+final allPlayerSessionsProvider =
+    StateNotifierProvider<AllPlayerSessionNotifier, List<PlayerSession>>((ref) {
+  return AllPlayerSessionNotifier();
 });
 
 final navRailIndexProvider = StateProvider<int>((ref) {
   return 0;
 });
 
-final visualMadnessProvider = StateProvider<int>((ref) {
+final madnessMeterProvider = StateProvider<int>((ref) {
   return 0;
 });
 
@@ -30,6 +40,10 @@ class AllSpellsNotifier extends StateNotifier<List<Spell>> {
     Spell updatedSpell = newSpell.copyWith(availableCampaigns: campaignIds);
     if (!state.contains(updatedSpell)) state = [...state, updatedSpell];
     return updatedSpell;
+  }
+
+  void clearAll() {
+    state = [];
   }
 
   void removeSpell(int spellId) {
@@ -69,6 +83,10 @@ class InCampaignSpellNotifier extends StateNotifier<List<Spell>> {
   void removeSpell(int spellId) {
     state.removeWhere((spell) => spell.id == spellId);
     state = state;
+  }
+
+  void clearAll() {
+    state = [];
   }
 
   void removeSpellFromCampaign(

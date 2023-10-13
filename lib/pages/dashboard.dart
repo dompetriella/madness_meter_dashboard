@@ -5,6 +5,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:madness_meter_dashboard/main.dart';
 import 'package:madness_meter_dashboard/models/player_session.dart';
 import 'package:madness_meter_dashboard/provider.dart';
+import '../db_functions.dart';
+import '../models/spell.dart';
 import 'dashboard/meter_screen.dart';
 import 'dashboard/nav.dart';
 import 'dashboard/spell_screen.dart';
@@ -17,24 +19,27 @@ class Dashboard extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    useEffect(() {
+    final initFunction = useCallback((_) async {
       try {
-        final stream = supabase
+        final stream = await supabase
             .from('player_session')
             .stream(primaryKey: ["id"]).eq('id', playerSession.id);
         stream.listen((data) {
           PlayerSession session = PlayerSession.fromJson(data.first);
-          ref.read(visualMadnessProvider.notifier).state = session.madnessValue;
+          ref.read(madnessMeterProvider.notifier).state = session.madnessValue;
         });
       } catch (e) {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Error: ' + e.toString())));
+            .showSnackBar(SnackBar(content: Text('Error: $e')));
       }
-      return null;
-    }, const []);
+    }, []);
 
-    var isMad =
-        ref.watch(visualMadnessProvider) > playerSession.maxMadnessValue;
+    useEffect(() {
+      initFunction(null);
+      return null;
+    }, []);
+
+    var isMad = ref.watch(madnessMeterProvider) > playerSession.maxMadnessValue;
 
     return SafeArea(
         child: Scaffold(
@@ -42,7 +47,7 @@ class Dashboard extends HookConsumerWidget {
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          NavRail(),
+          const NavRail(),
           Flexible(
             fit: FlexFit.tight,
             child: Padding(
@@ -65,14 +70,14 @@ class Dashboard extends HookConsumerWidget {
                         Row(
                           children: [
                             Text(
-                              'Current Madness: ${ref.watch(visualMadnessProvider)} / ${playerSession.maxMadnessValue}',
+                              'Current Madness: ${ref.watch(madnessMeterProvider)} / ${playerSession.maxMadnessValue}',
                               style: TextStyle(
                                   fontSize: 24,
                                   color: Theme.of(context)
                                       .colorScheme
                                       .onSecondary),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 24,
                             ),
                             Container(
@@ -90,7 +95,7 @@ class Dashboard extends HookConsumerWidget {
                                   alignment: Alignment.centerLeft,
                                   widthFactor: isMad
                                       ? 1
-                                      : ref.watch(visualMadnessProvider) /
+                                      : ref.watch(madnessMeterProvider) /
                                           playerSession.maxMadnessValue,
                                   child: AnimatedContainer(
                                     duration: 300.ms,
