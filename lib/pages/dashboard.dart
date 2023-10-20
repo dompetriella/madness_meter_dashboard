@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -19,12 +21,14 @@ class Dashboard extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    StreamSubscription? streamSubscription;
+
     final initFunction = useCallback((_) async {
       try {
         final stream = await supabase
             .from('player_session')
             .stream(primaryKey: ["id"]).eq('id', playerSession.id);
-        stream.listen((data) {
+        streamSubscription = stream.listen((data) {
           PlayerSession session = PlayerSession.fromJson(data.first);
           ref.read(madnessMeterProvider.notifier).state = session.madnessValue;
         });
@@ -36,7 +40,9 @@ class Dashboard extends HookConsumerWidget {
 
     useEffect(() {
       initFunction(null);
-      return null;
+      return () {
+        streamSubscription?.cancel();
+      };
     }, []);
 
     var isMad = ref.watch(madnessMeterProvider) > playerSession.maxMadnessValue;
