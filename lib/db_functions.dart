@@ -33,6 +33,23 @@ void updateSessionMadnessValue(int id, int changeAmount, WidgetRef ref) async {
       .updateSessionMadness(id, newValue);
 }
 
+void updateSessionMadnessToZero(int id, WidgetRef ref) async {
+  await supabase.from('player_session').update({
+    'madness_value': 0,
+  }).eq('id', id);
+  ref.read(allPlayerSessionsProvider.notifier).updateSessionMadness(id, 0);
+}
+
+void updateSessionMadnessToMaxValue(
+    PlayerSession playerSession, WidgetRef ref) async {
+  await supabase.from('player_session').update({
+    'madness_value': playerSession.maxMadnessValue,
+  }).eq('id', playerSession.id);
+  ref
+      .read(allPlayerSessionsProvider.notifier)
+      .updateSessionMadness(playerSession.id, playerSession.maxMadnessValue);
+}
+
 void addPlayerSessionsToState(WidgetRef ref) async {
   final List<dynamic> data = await supabase.from('player_session').select('*');
   final List<PlayerSession> playerSessions =

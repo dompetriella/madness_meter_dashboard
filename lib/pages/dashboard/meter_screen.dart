@@ -39,36 +39,50 @@ class MeterScreen extends HookConsumerWidget {
       return null;
     }, []);
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        ActionButtonArea(
-          playerSession: playerSession,
-          title: 'Damage',
-          areaColor: Theme.of(context).colorScheme.tertiary,
-          dbButtons: [
-            DatabaseActionButton(
-                text: 'Thought', value: 2, playerSession: playerSession),
-            DatabaseActionButton(
-                text: 'Scheme', value: 4, playerSession: playerSession),
-            DatabaseActionButton(
-                text: 'Machination', value: 8, playerSession: playerSession)
-          ],
-        ),
-        ActionButtonArea(
-          playerSession: playerSession,
-          title: 'Healing',
-          areaColor: Theme.of(context).colorScheme.primary,
-          dbButtons: [
-            DatabaseActionButton(
-                text: 'Thought', value: -2, playerSession: playerSession),
-            DatabaseActionButton(
-                text: 'Scheme', value: -4, playerSession: playerSession),
-            DatabaseActionButton(
-                text: 'Machination', value: -8, playerSession: playerSession)
-          ],
-        ),
-      ],
+    return Flexible(
+      flex: 1,
+      child: ListView(
+        children: [
+          ActionButtonArea(
+            playerSession: playerSession,
+            title: 'Damage',
+            areaColor: Theme.of(context).colorScheme.tertiary,
+            dbButtons: [
+              DatabaseActionButton(
+                  text: 'Thought', value: 2, playerSession: playerSession),
+              DatabaseActionButton(
+                  text: 'Scheme', value: 4, playerSession: playerSession),
+              DatabaseActionButton(
+                  text: 'Machination', value: 8, playerSession: playerSession),
+              DatabaseLongPressActionButton(
+                  text: 'HOLD: \nSet Madness to Max',
+                  playerSession: playerSession,
+                  onLongPress: () {
+                    updateSessionMadnessToMaxValue(playerSession, ref);
+                  }),
+            ],
+          ),
+          ActionButtonArea(
+            playerSession: playerSession,
+            title: 'Healing',
+            areaColor: Theme.of(context).colorScheme.primary,
+            dbButtons: [
+              DatabaseActionButton(
+                  text: 'Thought', value: -2, playerSession: playerSession),
+              DatabaseActionButton(
+                  text: 'Scheme', value: -4, playerSession: playerSession),
+              DatabaseActionButton(
+                  text: 'Machination', value: -8, playerSession: playerSession),
+              DatabaseLongPressActionButton(
+                  text: 'HOLD: \nSet Madness to Zero',
+                  playerSession: playerSession,
+                  onLongPress: () {
+                    updateSessionMadnessToZero(playerSession.id, ref);
+                  }),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
@@ -157,6 +171,54 @@ class DatabaseActionButton extends ConsumerWidget {
             child: Center(
               child: Text(
                 '$text\n(d${value.abs()})',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 18,
+                    color: Theme.of(context).colorScheme.onSecondary),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class DatabaseLongPressActionButton extends ConsumerWidget {
+  final String text;
+  final PlayerSession playerSession;
+  final VoidCallback onLongPress;
+  const DatabaseLongPressActionButton(
+      {super.key,
+      required this.text,
+      required this.playerSession,
+      required this.onLongPress});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Padding(
+      padding: const EdgeInsets.all(24.0),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+            backgroundColor:
+                Theme.of(context).colorScheme.tertiary.withOpacity(.25),
+            elevation: 10,
+            shape: RoundedRectangleBorder(
+                side: BorderSide(
+                    color:
+                        Theme.of(context).colorScheme.onPrimary.withOpacity(.5),
+                    width: 3),
+                borderRadius: BorderRadius.circular(20))),
+        onPressed: () {},
+        onLongPress: onLongPress,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            height: 100,
+            width: 120,
+            child: Center(
+              child: Text(
+                '$text',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontSize: 18,

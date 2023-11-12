@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:madness_meter_dashboard/models/spellEnum.dart';
 import 'package:madness_meter_dashboard/provider.dart';
 
 import '../../models/player_session.dart';
@@ -174,27 +175,38 @@ class DraggableSpell extends StatelessWidget {
             builder: (context) {
               return AlertDialog(
                 backgroundColor: Colors.grey.shade900,
-                title: Text(
-                  spell.spellName,
-                  style: const TextStyle(color: Colors.white),
+                title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      spell.spellName,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    Text(
+                      'Type: ${SpellEnum.values[spell.spellType].name}',
+                      style: const TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                  ],
                 ),
-                content: SingleChildScrollView(
-                    child: Container(
-                        decoration: BoxDecoration(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .secondary
-                                .withOpacity(.5),
-                            borderRadius: BorderRadius.circular(5)),
-                        height: 350,
-                        width: 400,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text(
-                            spell.description,
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ))),
+                content: Builder(builder: (context) {
+                  return SingleChildScrollView(
+                      child: Container(
+                          decoration: BoxDecoration(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .secondary
+                                  .withOpacity(.5),
+                              borderRadius: BorderRadius.circular(5)),
+                          height: 350,
+                          width: 400,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Text(
+                              spell.description,
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          )));
+                }),
               ).animate().scale(duration: 200.ms).slideY(begin: 0.3);
             });
       },
